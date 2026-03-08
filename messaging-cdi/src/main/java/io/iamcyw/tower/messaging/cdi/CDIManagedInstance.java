@@ -3,7 +3,7 @@ package io.iamcyw.tower.messaging.cdi;
 
 import io.iamcyw.tower.messaging.spi.ManagedInstance;
 
-import javax.enterprise.inject.Instance;
+import jakarta.enterprise.inject.Instance;
 
 public class CDIManagedInstance<T> implements ManagedInstance<T> {
 

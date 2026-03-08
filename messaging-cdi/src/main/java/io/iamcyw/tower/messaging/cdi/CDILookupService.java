@@ -3,11 +3,11 @@ package io.iamcyw.tower.messaging.cdi;
 import io.iamcyw.tower.messaging.spi.LookupService;
 import io.iamcyw.tower.messaging.spi.ManagedInstance;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.AmbiguousResolutionException;
-import javax.enterprise.inject.UnsatisfiedResolutionException;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.CDI;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.AmbiguousResolutionException;
+import jakarta.enterprise.inject.UnsatisfiedResolutionException;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.CDI;
 import java.util.Set;
 
 /**
