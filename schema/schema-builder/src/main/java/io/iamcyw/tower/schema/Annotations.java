@@ -29,8 +29,6 @@ public class Annotations {
 
     public static final DotName USECASE = DotName.createSimple("io.iamcyw.tower.messaging.UseCase");
 
-    public static final DotName QUERY = DotName.createSimple("io.iamcyw.tower.messaging.QueryHandle");
-
     public static final DotName COMMAND = DotName.createSimple("io.iamcyw.tower.messaging.CommandHandle");
 
     public static final DotName PREDICATE = DotName.createSimple("io.iamcyw.tower.messaging.Predicate");

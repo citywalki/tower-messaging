@@ -2,7 +2,6 @@ package io.iamcyw.tower.quarkus.it;
 
 import io.iamcyw.tower.messaging.*;
 import io.iamcyw.tower.quarkus.it.domain.BasicTestCommand;
-import io.iamcyw.tower.quarkus.it.domain.BasicTestQuery;
 import io.iamcyw.tower.utils.CommonKit;
 import org.jboss.logging.Logger;
 import org.junit.jupiter.api.Assertions;
@@ -24,12 +23,6 @@ public class TestService {
     @Predicate
     public boolean testPredicate(BasicTestCommand payload, @Parameter("test") String type) {
         return payload.getPayload().equals(type);
-    }
-
-    @QueryHandle
-    @Parameter(value = "test", parameter = "payload")
-    public String query(BasicTestQuery basicTestQuery) {
-        return "success";
     }
 
 }

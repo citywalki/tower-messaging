@@ -52,7 +52,7 @@ public class SchemaBuilder {
             addOperations(schema, methods);
         }
 
-        // The above queries and mutations reference some models (input / type / interfaces / enum), let's create those
+        // The above commands reference some models (input / type / interfaces / enum), let's create those
         addTypesToSchema(schema);
 
         return schema;
@@ -84,10 +84,7 @@ public class SchemaBuilder {
     private void addOperations(Schema schema, List<MethodInfo> methodInfoList) {
         for (MethodInfo methodInfo : methodInfoList) {
             Annotations annotationsForMethod = Annotations.getAnnotationsForMethod(methodInfo);
-            if (annotationsForMethod.containsOneOfTheseAnnotations(Annotations.QUERY)) {
-                Operation query = operationCreator.createOperation(methodInfo, OperationType.QUERY);
-                schema.addQuery(query);
-            } else if (annotationsForMethod.containsOneOfTheseAnnotations(Annotations.COMMAND)) {
+            if (annotationsForMethod.containsOneOfTheseAnnotations(Annotations.COMMAND)) {
                 Operation command = operationCreator.createOperation(methodInfo, OperationType.COMMAND);
                 schema.addCommand(command);
             } else if (annotationsForMethod.containsOneOfTheseAnnotations(Annotations.PREDICATE)) {

@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 public final class Schema implements Serializable {
-    private Set<Operation> queries = new HashSet<>();
-
     private Set<Operation> commands = new HashSet<>();
 
     private Set<Operation> subscriptions = new HashSet<>();
@@ -24,20 +22,8 @@ public final class Schema implements Serializable {
     public Schema() {
     }
 
-    public Set<Operation> getQueries() {
-        return queries;
-    }
-
-    public void setQueries(Set<Operation> queries) {
-        this.queries = queries;
-    }
-
-    public void addQuery(Operation query) {
-        this.queries.add(query);
-    }
-
     public boolean hasOperations() {
-        return hasQueries() || hasCommands();
+        return hasCommands();
     }
 
     public Set<Operation> getPredicates() {
@@ -54,10 +40,6 @@ public final class Schema implements Serializable {
 
     public boolean hasPredicates() {
         return !this.predicates.isEmpty();
-    }
-
-    public boolean hasQueries() {
-        return !this.queries.isEmpty();
     }
 
     public Set<Operation> getCommands() {
@@ -194,7 +176,7 @@ public final class Schema implements Serializable {
 
     @Override
     public String toString() {
-        return "Schema{" + "queries=" + queries + ", mutations=" + commands + ", subscriptions=" + subscriptions +
+        return "Schema{" + "commands=" + commands + ", subscriptions=" + subscriptions +
                 ", wrappedDataFetchers=" + wrappedDataFetchers + ", fieldDataFetchers=" + fieldDataFetchers + '}';
     }
 

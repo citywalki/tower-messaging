@@ -26,8 +26,6 @@ public class Bootstrap {
 
     private MessageBus messageBus;
 
-    private Multimap<Identifier, MessageHandle<?>> queryHandles;
-
     private Multimap<Identifier, MessageHandle<?>> commandHandles;
 
     private List<MessageInterceptor> messageInterceptors = new ArrayList<>();
@@ -39,14 +37,6 @@ public class Bootstrap {
 
     public void bootstrap() {
         Assert.assertNotNull(schema);
-
-        if (schema.hasQueries()) {
-            Set<Operation> queries = schema.getQueries();
-
-            queryHandles = queries.stream().map(this::newMessageHandle).collect(
-                    Multimaps.toMultimap(MessageHandle::getIdentifier, messageHandle -> messageHandle,
-                                         MultimapBuilder.hashKeys().hashSetValues()::build));
-        }
 
         if (schema.hasCommands()) {
             Set<Operation> commands = schema.getCommands();
@@ -61,14 +51,6 @@ public class Bootstrap {
             predicates.forEach(this::handlePredicate);
         }
 
-    }
-
-    public Multimap<Identifier, MessageHandle<?>> getQueryHandles() {
-        return queryHandles;
-    }
-
-    public void setQueryHandles(Multimap<Identifier, MessageHandle<?>> queryHandles) {
-        this.queryHandles = queryHandles;
     }
 
     public Multimap<Identifier, MessageHandle<?>> getCommandHandles() {
@@ -105,11 +87,6 @@ public class Bootstrap {
 
     private void handlePredicate(Operation predicate) {
         Field domainClass = predicate.getArguments().get(0);
-
-        if (queryHandles != null) {
-            Multimaps.filterKeys(queryHandles, input -> input.getCommand().equals(domainClass)).values()
-                     .forEach(messageHandle -> messageHandle.addPredicate(predicate));
-        }
 
         if (commandHandles != null) {
             Multimaps.filterKeys(commandHandles, input -> input.getCommand().equals(domainClass)).values()

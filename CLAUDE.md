@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Tower Messaging is a Java framework implementing CQRS (Command Query Responsibility Segregation) and messaging patterns. It provides a message bus for dispatching commands and queries, with support for CDI and Quarkus integration.
+Tower Messaging is a Java framework implementing command messaging patterns. It provides a message bus for dispatching commands, with support for CDI and Quarkus integration.
 
 ## Build System
 
@@ -64,14 +64,13 @@ The project is organized into the following modules:
 ### Message Flow
 
 1. Messages are dispatched through `MessageBus.dispatch(Message<R>)`
-2. `DefaultMessageBus.route()` resolves the appropriate `MessageHandle` based on the message identifier and operation type (QUERY/COMMAND)
+2. `DefaultMessageBus.route()` resolves the appropriate `MessageHandle` based on the message identifier
 3. `DefaultInterceptorChain` processes any registered interceptors
 4. `MessageHandle.handle()` invokes the actual method via `OperationInvoker`
 
 ### Key Annotations
 
 - `@UseCase` - Marks a class as containing message handlers
-- `@QueryHandle` - Marks a method as a query handler
 - `@CommandHandle` - Marks a method as a command handler
 - `@Predicate` - Marks a method as a predicate for conditional message handling
 - `@Parameter` - Maps method parameters to message payload fields

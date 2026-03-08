@@ -134,11 +134,10 @@ public class FieldCreator extends ModelCreator {
     }
 
     private static String getOutputNameForField(Annotations annotationsForThisField, String fieldName) {
-        return annotationsForThisField.getOneOfTheseMethodAnnotationsValue(Annotations.QUERY,
-                                                                           Annotations.JAKARTA_JSONB_PROPERTY,
+        return annotationsForThisField.getOneOfTheseMethodAnnotationsValue(Annotations.JAKARTA_JSONB_PROPERTY,
                                                                            Annotations.JAVAX_JSONB_PROPERTY,
                                                                            Annotations.JACKSON_PROPERTY)
-                                      .orElse(annotationsForThisField.getOneOfTheseAnnotationsValue(Annotations.QUERY,
+                                      .orElse(annotationsForThisField.getOneOfTheseAnnotationsValue(
                                                                                                     Annotations.JAKARTA_JSONB_PROPERTY,
                                                                                                     Annotations.JAVAX_JSONB_PROPERTY,
                                                                                                     Annotations.JACKSON_PROPERTY)

@@ -146,8 +146,6 @@ public class MessageQuarkusProcessor {
         // Unique list of classes we need to do reflection on
         Set<String> classes = new HashSet<>();
 
-        classes.addAll(getOperationClassNames(schema.getQueries()));
-
         classes.addAll(getOperationClassNames(schema.getCommands()));
 
         return classes.toArray(new String[]{});

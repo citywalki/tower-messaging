@@ -56,8 +56,6 @@ public class OperationCreator extends ModelCreator {
 
     private static DotName getOperationAnnotation(OperationType operationType) {
         switch (operationType) {
-            case QUERY:
-                return Annotations.QUERY;
             case COMMAND:
                 return Annotations.COMMAND;
             case PREDICATE:
@@ -70,7 +68,7 @@ public class OperationCreator extends ModelCreator {
 
     private static String getDefaultExecutionTypeName(MethodInfo methodInfo, OperationType operationType) {
         String methodName = methodInfo.name();
-        if (operationType.equals(OperationType.QUERY) || operationType.equals(OperationType.COMMAND)) {
+        if (operationType.equals(OperationType.COMMAND)) {
             methodName = methodInfo.parameters().get(0).type().asClassType().name().withoutPackagePrefix();
         }
         return methodName;

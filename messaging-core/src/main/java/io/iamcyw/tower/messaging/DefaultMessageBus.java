@@ -37,9 +37,7 @@ public class DefaultMessageBus implements MessageBus {
     public void route(Message message) {
         CompletableFuture<MessageHandle<?>> messageHandleCF = CompletableFuture.supplyAsync(() -> {
             Collection<MessageHandle<?>> allowHandle;
-            if (message.getOperationType().equals(OperationType.QUERY)) {
-                allowHandle = bootstrap.getQueryHandles().get(message.getIdentifier());
-            } else if (message.getOperationType().equals(OperationType.COMMAND)) {
+            if (message.getOperationType().equals(OperationType.COMMAND)) {
                 allowHandle = bootstrap.getCommandHandles().get(message.getIdentifier());
             } else {
                 allowHandle = Collections.emptyList();

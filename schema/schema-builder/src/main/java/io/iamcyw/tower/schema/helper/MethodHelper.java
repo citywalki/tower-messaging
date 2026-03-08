@@ -86,7 +86,7 @@ public class MethodHelper {
      */
     private static boolean isPropertyAccessor(MethodInfo method) {
         return method.returnType().kind() != Type.Kind.VOID && method.parameters().isEmpty() &&
-                (method.hasAnnotation(Annotations.QUERY) || isGetterName(method.name()));
+                isGetterName(method.name());
     }
 
     private static String toNameFromSetter(String methodName) {

@@ -1,11 +1,10 @@
 # Tower Messaging
 
-A Java framework implementing CQRS (Command Query Responsibility Segregation) and messaging patterns with built-in support for CDI and Quarkus.
+A Java command messaging framework with built-in support for CDI and Quarkus.
 
 ## Features
 
-- **Message Bus** - Dispatch commands and queries through a unified interface
-- **CQRS Support** - Separate command and query handlers with clear semantics
+- **Message Bus** - Dispatch commands through a unified interface
 - **CDI Integration** - Works with Jakarta EE CDI contexts (Jakarta EE 10+)
 - **Quarkus Extension** - First-class support for Quarkus applications
 - **Schema Generation** - Build-time schema generation using Jandex indexing
@@ -42,12 +41,6 @@ dependencies {
 @UseCase
 public class UserUseCase {
 
-    @QueryHandle
-    public User getUser(@Parameter("id") String userId) {
-        // Fetch and return user
-        return userRepository.findById(userId);
-    }
-
     @CommandHandle
     public User createUser(@Parameter("name") String name,
                            @Parameter("email") String email) {
@@ -63,11 +56,8 @@ public class UserUseCase {
 @Inject
 MessageGateway gateway;
 
-// Query
-User user = gateway.query(new GetUserQuery("user-123"));
-
 // Command
-User newUser = gateway.command(new CreateUserCommand("John", "john@example.com"));
+gateway.send(new CreateUserCommand("John", "john@example.com"));
 ```
 
 ## Project Structure
@@ -105,7 +95,6 @@ User newUser = gateway.command(new CreateUserCommand("John", "john@example.com")
 | Annotation | Purpose |
 |------------|---------|
 | `@UseCase` | Marks a class containing message handlers |
-| `@QueryHandle` | Marks a method as a query handler |
 | `@CommandHandle` | Marks a method as a command handler |
 | `@Predicate` | Conditional message handling |
 | `@Parameter` | Maps method parameters to message fields |
