@@ -7,6 +7,7 @@ import io.iamcyw.tower.schema.model.*;
 import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.DotName;
 import org.jboss.jandex.MethodInfo;
+import org.jboss.jandex.MethodParameterInfo;
 import org.jboss.jandex.Type;
 
 import java.lang.reflect.Modifier;
@@ -70,7 +71,7 @@ public class OperationCreator extends ModelCreator {
     private static String getDefaultExecutionTypeName(MethodInfo methodInfo, OperationType operationType) {
         String methodName = methodInfo.name();
         if (operationType.equals(OperationType.QUERY) || operationType.equals(OperationType.COMMAND)) {
-            methodName = methodInfo.parameters().get(0).asClassType().name().withoutPackagePrefix();
+            methodName = methodInfo.parameters().get(0).type().asClassType().name().withoutPackagePrefix();
         }
         return methodName;
     }
@@ -120,7 +121,7 @@ public class OperationCreator extends ModelCreator {
         }
 
         // Arguments
-        List<Type> parameters = methodInfo.parameters();
+        List<MethodParameterInfo> parameters = methodInfo.parameters();
         for (short i = 0; i < parameters.size(); i++) {
             Optional<Argument> maybeArgument = argumentCreator.createArgument(operation, methodInfo, i);
             maybeArgument.ifPresent(operation::addArgument);

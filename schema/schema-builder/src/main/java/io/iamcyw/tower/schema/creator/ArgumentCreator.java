@@ -44,7 +44,7 @@ public class ArgumentCreator extends ModelCreator {
         Annotations annotationsForThisArgument = Annotations.getAnnotationsForArgument(methodInfo, position);
 
         // Argument Type
-        Type argumentType = methodInfo.parameters().get(position);
+        Type argumentType = methodInfo.parameters().get(position).type();
 
         boolean isDomain = position == 0;
 

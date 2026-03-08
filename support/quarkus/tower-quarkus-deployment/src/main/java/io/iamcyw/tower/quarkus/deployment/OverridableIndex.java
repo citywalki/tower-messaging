@@ -80,6 +80,29 @@ public class OverridableIndex implements IndexView {
         return overrideCollection(original.getKnownUsers(dn), override.getKnownUsers(dn), classInfoComparator);
     }
 
+    @Override
+    public Set<DotName> getSubpackages(DotName dn) {
+        Set<DotName> result = new TreeSet<>((d1, d2) -> d1.toString().compareTo(d2.toString()));
+        result.addAll(original.getSubpackages(dn));
+        result.addAll(override.getSubpackages(dn));
+        return result;
+    }
+
+    @Override
+    public Collection<ClassInfo> getClassesInPackage(DotName dn) {
+        return overrideCollection(original.getClassesInPackage(dn), override.getClassesInPackage(dn), classInfoComparator);
+    }
+
+    @Override
+    public Collection<ClassInfo> getAllKnownSubinterfaces(DotName dn) {
+        return overrideCollection(original.getAllKnownSubinterfaces(dn), override.getAllKnownSubinterfaces(dn), classInfoComparator);
+    }
+
+    @Override
+    public Collection<ClassInfo> getKnownDirectSubinterfaces(DotName dn) {
+        return overrideCollection(original.getKnownDirectSubinterfaces(dn), override.getKnownDirectSubinterfaces(dn), classInfoComparator);
+    }
+
     private Comparator<ClassInfo> classInfoComparator = new Comparator<ClassInfo>() {
         @Override
         public int compare(ClassInfo t, ClassInfo t1) {
@@ -128,7 +151,7 @@ public class OverridableIndex implements IndexView {
                 if (t.name().toString().compareTo(t1.name().toString()) == 0) { // Same method name
                     if (t.parameters().size() == t1.parameters().size()) { // Same number of parameters
                         for (int i = 0; i < t.parameters().size(); i++) {
-                            int typeTheSame = typeComparator.compare(t.parameters().get(i), t1.parameters().get(i));
+                            int typeTheSame = typeComparator.compare(t.parameters().get(i).type(), t1.parameters().get(i).type());
                             if (typeTheSame != 0) {
                                 return typeTheSame;
                             }

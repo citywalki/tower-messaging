@@ -10,6 +10,7 @@ import io.quarkus.gizmo.ResultHandle;
 import io.quarkus.runtime.util.HashUtil;
 import org.jboss.jandex.ClassInfo;
 import org.jboss.jandex.MethodInfo;
+import org.jboss.jandex.MethodParameterInfo;
 import org.jboss.jandex.Type;
 
 import java.lang.reflect.Modifier;
@@ -28,11 +29,11 @@ public class MethodInvokerFactory {
         StringBuilder sigBuilder = new StringBuilder();
 
         String methodName = info.name();
-        String commandName = info.parameters().get(0).name().withoutPackagePrefix();
+        String commandName = info.parameters().get(0).type().name().withoutPackagePrefix();
         sigBuilder.append(methodName).append(info.returnType().name().withoutPackagePrefix());
 
-        for (Type parameter : info.parameters()) {
-            sigBuilder.append(parameter.name().toString());
+        for (MethodParameterInfo paramInfo : info.parameters()) {
+            sigBuilder.append(paramInfo.type().name().toString());
         }
         String baseName = currentClassInfo.name() + "$" + methodName + "$" + commandName + "_" +
                 HashUtil.sha1(sigBuilder.toString());

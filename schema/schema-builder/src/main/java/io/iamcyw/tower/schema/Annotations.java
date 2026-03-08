@@ -3,6 +3,7 @@ package io.iamcyw.tower.schema;
 import io.iamcyw.tower.schema.helper.Direction;
 import org.jboss.jandex.*;
 import org.jboss.jandex.AnnotationTarget.Kind;
+import org.jboss.jandex.MethodParameterInfo;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -254,7 +255,7 @@ public class Annotations {
                     "Parameter at position " + pos + " not found on method " + methodInfo.name());
         }
 
-        final Type parameterType = methodInfo.parameters().get(pos);
+        final Type parameterType = methodInfo.parameters().get(pos).type();
 
         Map<DotName, AnnotationInstance> annotationMap = getAnnotations(parameterType);
 
@@ -338,9 +339,9 @@ public class Annotations {
             annotationsForField.putAll(getTypeUseAnnotations(fieldInfo.type()));
         }
         if (methodInfo != null) {
-            List<org.jboss.jandex.Type> parameters = methodInfo.parameters();
+            List<MethodParameterInfo> parameters = methodInfo.parameters();
             if (!parameters.isEmpty()) {
-                org.jboss.jandex.Type param = parameters.get(ZERO);
+                org.jboss.jandex.Type param = parameters.get(ZERO).type();
                 annotationsForField.putAll(getTypeUseAnnotations(param));
             }
         }

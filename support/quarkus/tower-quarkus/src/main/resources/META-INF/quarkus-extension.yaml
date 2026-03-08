@@ -1,8 +1,8 @@
 ---
 name: "Tower Quarkus"
 metadata:
-  built-with-quarkus-core: "@quarkus@"
+  built-with-quarkus-core: "3.2.12.Final"
   extension-dependencies:
     - "io.quarkus:quarkus-arc::jar"
     - "io.quarkus:quarkus-core::jar"
-artifact: "io.iamcyw.tower:tower-quarkus::jar:@version@"
+artifact: "io.iamcyw.tower:tower-quarkus::jar:1.4.0-SNAPSHOT"
