@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
 
-    implementation("io.quarkus:quarkus-vertx-web")
+    implementation("io.quarkus:quarkus-reactive-routes")
     implementation("io.quarkus:quarkus-arc")
 
     implementation(project(":common"))

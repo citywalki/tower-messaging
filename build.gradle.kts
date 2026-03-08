@@ -1,5 +1,5 @@
 plugins {
-    id("io.quarkus") version "2.9.0.Final" apply false
+    id("io.quarkus") version "3.2.12.Final" apply false
     id("io.github.gradle-nexus.publish-plugin")
 }
 
@@ -20,7 +20,7 @@ repositories {
 }
 
 ext {
-    set("quarkus", "2.9.0.Final")
+    set("quarkus", "3.2.12.Final")
 }
 
 allprojects {
