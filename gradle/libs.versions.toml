@@ -1,0 +1,87 @@
+[versions]
+# Java
+java = "21"
+
+# Core Libraries
+jboss-logging = "3.6.1.Final"
+jboss-logging-annotations = "2.2.1.Final"
+jboss-logging-processor = "2.2.1.Final"
+jandex = "3.2.3"
+
+# Jakarta EE
+jakarta-cdi = "4.1.0"
+jakarta-inject = "2.0.1"
+microprofile-context-propagation = "1.3"
+
+# Apache Commons
+commons-lang3 = "3.17.0"
+commons-collections4 = "4.4"
+
+# Google
+guava = "33.3.1-jre"
+
+# Quarkus
+quarkus = "3.31.2"
+
+# Testing
+junit-jupiter = "5.11.4"
+assertj = "3.27.3"
+rest-assured = "5.5.0"
+
+# Build Plugins
+gradle-nexus-publish = "2.0.0"
+
+[libraries]
+# JBoss Logging
+jboss-logging = { module = "org.jboss.logging:jboss-logging", version.ref = "jboss-logging" }
+jboss-logging-annotations = { module = "org.jboss.logging:jboss-logging-annotations", version.ref = "jboss-logging-annotations" }
+jboss-logging-processor = { module = "org.jboss.logging:jboss-logging-processor", version.ref = "jboss-logging-processor" }
+
+# Jandex
+jandex = { module = "org.jboss:jandex", version.ref = "jandex" }
+
+# Jakarta EE
+jakarta-cdi-api = { module = "jakarta.enterprise:jakarta.enterprise.cdi-api", version.ref = "jakarta-cdi" }
+jakarta-inject-api = { module = "jakarta.inject:jakarta.inject-api", version.ref = "jakarta-inject" }
+microprofile-context-propagation-api = { module = "org.eclipse.microprofile.context-propagation:microprofile-context-propagation-api", version.ref = "microprofile-context-propagation" }
+
+# Apache Commons
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang3" }
+commons-collections4 = { module = "org.apache.commons:commons-collections4", version.ref = "commons-collections4" }
+
+# Google
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+
+# Quarkus Runtime
+quarkus-core = { module = "io.quarkus:quarkus-core" }
+quarkus-arc = { module = "io.quarkus:quarkus-arc" }
+quarkus-reactive-routes = { module = "io.quarkus:quarkus-reactive-routes" }
+
+# Quarkus Deployment
+quarkus-core-deployment = { module = "io.quarkus:quarkus-core-deployment" }
+quarkus-arc-deployment = { module = "io.quarkus:quarkus-arc-deployment" }
+
+# Quarkus Testing
+quarkus-junit5 = { module = "io.quarkus:quarkus-junit5" }
+quarkus-junit5-internal = { module = "io.quarkus:quarkus-junit5-internal" }
+quarkus-extension-processor = { module = "io.quarkus:quarkus-extension-processor" }
+
+# Testing
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter" }
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit-jupiter" }
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+rest-assured = { module = "io.rest-assured:rest-assured", version.ref = "rest-assured" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
+# BOMs
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit-jupiter" }
+quarkus-bom = { module = "io.quarkus:quarkus-bom", version.ref = "quarkus" }
+
+[bundles]
+jboss-logging = ["jboss-logging", "jboss-logging-annotations"]
+jboss-logging-annotation-processor = ["jboss-logging-processor", "jboss-logging-annotations"]
+junit-jupiter = ["junit-jupiter-engine", "junit-jupiter-api"]
+
+[plugins]
+quarkus = { id = "io.quarkus", version.ref = "quarkus" }
+nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "gradle-nexus-publish" }

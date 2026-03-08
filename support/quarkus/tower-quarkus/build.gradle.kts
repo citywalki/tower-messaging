@@ -1,8 +1,10 @@
 plugins {
-    `java-library`
-    id("java-conventions")
-    id("maven-deploy")
+    id("tower.java-conventions")
+    id("tower.maven-publish")
+    id("tower.quarkus-conventions")
 }
+
+description = "Tower Quarkus Extension Runtime"
 
 java {
     registerFeature("metrics") {
@@ -11,14 +13,9 @@ java {
 }
 
 dependencies {
-    annotationProcessor("io.quarkus:quarkus-extension-processor")
-
-    implementation("io.quarkus:quarkus-core")
-    implementation("io.quarkus:quarkus-arc")
-
-//    compileOnly("io.quarkus:quarkus-micrometer")
+    implementation(libs.quarkus.core)
+    implementation(libs.quarkus.arc)
 
     api(project(":messaging-cdi"))
     api(project(":schema:schema-model"))
-
 }

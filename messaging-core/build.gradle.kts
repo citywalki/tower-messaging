@@ -1,15 +1,15 @@
 plugins {
-    `java-library`
-    id("java-conventions")
-    id("maven-deploy")
+    id("tower.java-conventions")
+    id("tower.maven-publish")
 }
 
-dependencies {
-    implementation("org.jboss.logging:jboss-logging")
+description = "Tower Messaging Core"
 
+dependencies {
+    implementation(libs.jboss.logging)
     implementation(project(":common"))
     implementation(project(":schema:schema-model"))
 
-    testImplementation("org.jboss:jandex")
+    testImplementation(libs.jandex)
     testImplementation(project(":schema:schema-builder"))
 }

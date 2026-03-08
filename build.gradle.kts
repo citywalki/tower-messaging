@@ -1,38 +1,34 @@
 plugins {
-    id("io.quarkus") version "3.2.12.Final" apply false
     id("io.github.gradle-nexus.publish-plugin")
 }
 
+// Project Information
+allprojects {
+    group = "io.iamcyw.tower"
+    version = findProperty("version")?.toString() ?: "0.1.0-SNAPSHOT"
+}
+
+// Nexus Publishing Configuration
 nexusPublishing {
     repositories {
-        sonatype {  //only for users registered in Sonatype after 24 Feb 2021
+        sonatype {
+            // For users registered in Sonatype after 24 Feb 2021
             nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
             snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-            username.set(project.property("MAVEN_USERNAME").toString())
-            password.set(project.property("MAVEN_PASSWORD").toString())
+
+            username.set(providers.gradleProperty("MAVEN_USERNAME").orElse(providers.environmentVariable("MAVEN_USERNAME")))
+            password.set(providers.gradleProperty("MAVEN_PASSWORD").orElse(providers.environmentVariable("MAVEN_PASSWORD")))
         }
     }
 }
 
-repositories {
-    maven("https://maven.aliyun.com/repository/central")
-    maven("https://maven.aliyun.com/repository/gradle-plugin")
+// Wrapper Task Configuration
+tasks.wrapper {
+    gradleVersion = "9.0"
+    distributionType = Wrapper.DistributionType.BIN
 }
 
-ext {
-    set("quarkus", "3.2.12.Final")
-}
-
-allprojects {
-
-    group = "io.iamcyw.tower"
-    description = "tower projects"
-
-    repositories {
-        maven("https://maven.aliyun.com/repository/central")
-    }
-
-    configurations.all {
-        resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.MINUTES)
-    }
+// Aggregate Reports for Root Project
+subprojects {
+    // Empty configuration for subprojects
 }

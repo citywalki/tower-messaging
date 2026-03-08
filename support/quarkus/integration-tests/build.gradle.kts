@@ -1,25 +1,21 @@
 plugins {
     id("java")
-    id("io.quarkus")
-    id("java-conventions")
+    alias(libs.plugins.quarkus)
+    id("tower.java-conventions")
 }
 
-repositories {
-//    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-    mavenLocal()
-}
+description = "Tower Quarkus Integration Tests"
 
 dependencies {
+    implementation(platform(libs.quarkus.bom))
 
-    implementation("io.quarkus:quarkus-reactive-routes")
-    implementation("io.quarkus:quarkus-arc")
+    implementation(libs.quarkus.reactive.routes)
+    implementation(libs.quarkus.arc)
 
     implementation(project(":common"))
-
     implementation(project(":support:quarkus:tower-quarkus"))
     implementation(project(":support:quarkus:tower-quarkus-deployment"))
 
-    testImplementation("io.quarkus:quarkus-junit5")
-    testImplementation("io.rest-assured:rest-assured")
-
+    testImplementation(libs.quarkus.junit5)
+    testImplementation(libs.rest.assured)
 }

@@ -103,6 +103,18 @@ public class OverridableIndex implements IndexView {
         return overrideCollection(original.getKnownDirectSubinterfaces(dn), override.getKnownDirectSubinterfaces(dn), classInfoComparator);
     }
 
+    @Override
+    public Collection<ClassInfo> getAllKnownImplementations(DotName dn) {
+        return overrideCollection(original.getAllKnownImplementations(dn), override.getAllKnownImplementations(dn),
+                classInfoComparator);
+    }
+
+    @Override
+    public Collection<ClassInfo> getKnownDirectImplementations(DotName dn) {
+        return overrideCollection(original.getKnownDirectImplementations(dn), override.getKnownDirectImplementations(dn),
+                classInfoComparator);
+    }
+
     private Comparator<ClassInfo> classInfoComparator = new Comparator<ClassInfo>() {
         @Override
         public int compare(ClassInfo t, ClassInfo t1) {

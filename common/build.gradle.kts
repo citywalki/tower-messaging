@@ -1,16 +1,14 @@
 plugins {
-    `java-library`
-    id("java-conventions")
-    id("maven-deploy")
+    id("tower.java-conventions")
+    id("tower.maven-publish")
 }
 
-description = "tower commons"
+description = "Tower Common Utilities"
 
 dependencies {
-    implementation("org.jboss.logging:jboss-logging")
+    implementation(libs.jboss.logging)
 
-    api("com.google.guava:guava")
-
-    api("org.apache.commons:commons-lang3")
-    api("org.apache.commons:commons-collections4")
+    api(libs.guava)
+    api(libs.commons.lang3)
+    api(libs.commons.collections4)
 }

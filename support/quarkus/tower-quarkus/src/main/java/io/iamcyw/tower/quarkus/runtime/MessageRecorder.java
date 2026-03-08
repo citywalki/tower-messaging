@@ -12,7 +12,7 @@ import io.quarkus.runtime.annotations.Recorder;
 public class MessageRecorder {
 
     public RuntimeValue<Boolean> createMessageService(BeanContainer beanContainer, Schema schema) {
-        MessageProducer graphQLProducer = beanContainer.instance(MessageProducer.class);
+        MessageProducer graphQLProducer = beanContainer.beanInstance(MessageProducer.class);
         boolean initialize = graphQLProducer.initialize(schema);
         return new RuntimeValue<>(initialize);
     }

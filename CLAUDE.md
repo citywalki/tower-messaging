@@ -11,30 +11,27 @@ Tower Messaging is a Java framework implementing CQRS (Command Query Responsibil
 This is a Gradle multi-module project using Kotlin DSL for build scripts.
 
 **Prerequisites:**
-- Java 17+ (configured in `java-conventions.gradle.kts`)
-- Gradle 7.4.2+ (or use system gradle)
+- Java 21+ (configured in `java-conventions.gradle.kts`)
+- Gradle 9.0+ (via wrapper)
 - `MAVEN_USERNAME` and `MAVEN_PASSWORD` properties must be defined in `~/.gradle/gradle.properties` for publishing (dummy values are fine for local builds)
 
 **Common Commands:**
 
 ```bash
-# Build all modules
-gradle build
+# Build all modules (use wrapper for Gradle 9.0)
+./gradlew build
 
 # Run all tests
-gradle test
+./gradlew test
 
 # Run tests for a specific module
-gradle :messaging-core:test
-
-# Run Quarkus integration tests
-gradle quarkusIntTest
+./gradlew :messaging-core:test
 
 # Publish to local Maven repository
-gradle publishToMavenLocal
+./gradlew publishToMavenLocal
 
 # Clean build outputs
-gradle clean
+./gradlew clean
 ```
 
 ## Project Structure
@@ -56,7 +53,7 @@ The project is organized into the following modules:
 
 - **`support:quarkus:tower-quarkus`** - Quarkus runtime extension
 - **`support:quarkus:tower-quarkus-deployment`** - Quarkus build-time deployment processor
-- **`support:quarkus:integration-tests`** - Quarkus integration tests
+- **`support:quarkus:integration-tests`** - Quarkus integration tests (currently excluded due to Gradle 9.0 compatibility issue)
 
 ### Dependencies
 
@@ -115,7 +112,7 @@ Quarkus tests use `@QuarkusTest` and inject `MessageGateway`.
 
 The `buildSrc` directory contains convention plugins:
 
-- **`java-conventions.gradle.kts`** - Java 17 source/target compatibility, JUnit 5 setup, JBoss Logging annotation processor
+- **`java-conventions.gradle.kts`** - Java 21 source/target compatibility, JUnit 5 setup, JBoss Logging annotation processor
 - **`maven-deploy.gradle.kts`** - Maven publishing configuration with sources and Javadoc jars
 
 All Java modules apply these conventions and inherit dependency versions from `messaging-dependencies`.

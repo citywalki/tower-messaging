@@ -1,18 +1,15 @@
 plugins {
-    `java-library`
-    id("java-conventions")
-    id("maven-deploy")
+    id("tower.java-conventions")
+    id("tower.maven-publish")
 }
 
-description = "tower schema"
+description = "Tower Schema Builder"
 
 dependencies {
-    implementation("org.jboss.logging:jboss-logging")
-
-    testCompileOnly("org.jboss.logging:jboss-logging")
+    implementation(libs.jboss.logging)
     implementation(project(":common"))
     implementation(project(":schema:schema-model"))
-    implementation("org.jboss:jandex")
+    implementation(libs.jandex)
 
-//    testImplementation(project(":core"))
+    testCompileOnly(libs.jboss.logging)
 }

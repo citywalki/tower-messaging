@@ -1,23 +1,25 @@
 plugins {
-    `java-library`
-    id("java-conventions")
-    id("maven-deploy")
+    id("tower.java-conventions")
+    id("tower.maven-publish")
+    id("tower.quarkus-conventions")
 }
 
+description = "Tower Quarkus Extension Deployment"
+
 dependencies {
-    annotationProcessor("io.quarkus:quarkus-extension-processor")
-
     api(project(":support:quarkus:tower-quarkus"))
-
-    api("io.quarkus:quarkus-core-deployment")
-    api("io.quarkus:quarkus-arc-deployment")
-
     api(project(":schema:schema-builder"))
 
-    testImplementation("io.quarkus:quarkus-junit5-internal")
+    api(libs.quarkus.core.deployment)
+    api(libs.quarkus.arc.deployment)
+
+    testImplementation(libs.quarkus.junit5.internal)
 }
 
 tasks.test {
-    systemProperties["java.util.logging.manager"] = "org.jboss.logmanager.LogManager"
-    systemProperties["platform.quarkus.native.builder-image"] = false
+    systemProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager")
+    systemProperty("platform.quarkus.native.builder-image", "false")
+    filter {
+        failOnNoDiscoveredTests = false
+    }
 }

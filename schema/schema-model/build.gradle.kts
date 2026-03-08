@@ -1,10 +1,10 @@
 plugins {
-    `java-library`
-    id("java-conventions")
-    id("maven-deploy")
+    id("tower.java-conventions")
+    id("tower.maven-publish")
 }
 
-//description = "tower schema"
+description = "Tower Schema Model"
 
 dependencies {
+    // No external dependencies for model
 }

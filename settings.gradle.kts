@@ -1,22 +1,32 @@
 rootProject.name = "tower-messaging"
 
-include(
-        "messaging-dependencies"
-)
+// Plugin Management
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
 
-include(
-        "schema:schema-builder",
-        "schema:schema-model"
-)
+// Dependency Resolution Management
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+}
 
-include(
-        "common",
-        "messaging-core",
-        "messaging-cdi"
-)
+// Project Structure
+include("messaging-dependencies")
 
-include(
-        "support:quarkus:integration-tests",
-        "support:quarkus:tower-quarkus",
-        "support:quarkus:tower-quarkus-deployment"
-)
+include("common")
+include("messaging-core")
+include("messaging-cdi")
+
+include("schema:schema-model")
+include("schema:schema-builder")
+
+include("support:quarkus:tower-quarkus")
+include("support:quarkus:tower-quarkus-deployment")
+include("support:quarkus:integration-tests")
+

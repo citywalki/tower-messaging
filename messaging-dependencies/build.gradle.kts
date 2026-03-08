@@ -1,36 +1,45 @@
 plugins {
-    `java-platform`
-    id("java-conventions")
-    id("maven-deploy")
+    id("tower.java-platform-conventions")
 }
 
-javaPlatform {
-    allowDependencies()
-}
+description = "Tower Messaging Dependencies Platform"
 
 dependencies {
     constraints {
-        api("org.jboss.logging:jboss-logging:3.6.1.Final")
-        api("org.jboss.logging:jboss-logging-annotations:2.2.1.Final")
-        api("org.jboss.logging:jboss-logging-processor:2.2.1.Final")
+        // JBoss Logging
+        api(libs.jboss.logging)
+        api(libs.jboss.logging.annotations)
+        api(libs.jboss.logging.processor)
 
-        // Jakarta EE 10 - jakarta 命名空间
-        api("jakarta.enterprise:jakarta.enterprise.cdi-api:4.1.0")
-        api("jakarta.inject:jakarta.inject-api:2.0.1")
-        api("org.eclipse.microprofile.context-propagation:microprofile-context-propagation-api:1.3")
+        // Jandex
+        api(libs.jandex)
 
-        api("com.google.guava:guava:33.3.1-jre")
+        // Jakarta EE 10
+        api(libs.jakarta.cdi.api)
+        api(libs.jakarta.inject.api)
+        api(libs.microprofile.context.propagation.api)
 
-        api("org.apache.commons:commons-collections4:4.4")
-        api("org.apache.commons:commons-lang3:3.17.0")
-        api("org.jboss:jandex:3.2.3")
+        // Apache Commons
+        api(libs.commons.lang3)
+        api(libs.commons.collections4)
 
-        api("org.junit.jupiter:junit-jupiter-engine:5.11.4")
-        api("org.assertj:assertj-core:3.27.3")
+        // Google Guava
+        api(libs.guava)
 
+        // Testing
+        api(libs.junit.jupiter.engine)
+        api(libs.assertj.core)
+
+        // Internal Modules
         api(project(":common"))
         api(project(":messaging-core"))
+        api(project(":messaging-cdi"))
+        api(project(":schema:schema-model"))
+        api(project(":schema:schema-builder"))
         api(project(":support:quarkus:tower-quarkus"))
         api(project(":support:quarkus:tower-quarkus-deployment"))
     }
+
+    // Import Quarkus BOM
+    api(platform(libs.quarkus.bom))
 }

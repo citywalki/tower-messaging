@@ -118,7 +118,8 @@ public class MessageQuarkusProcessor {
         towerMessageSchemaBuildItemBuildProducer.produce(new TowerMessageSchemaBuildItem(schema));
 
         // Make sure the complex object from the application can work in native mode
-        reflectiveClassProducer.produce(new ReflectiveClassBuildItem(true, true, getSchemaJavaClasses(schema)));
+        reflectiveClassProducer.produce(
+                ReflectiveClassBuildItem.builder(getSchemaJavaClasses(schema)).methods(true).fields(true).build());
     }
 
     @Record(ExecutionTime.RUNTIME_INIT)

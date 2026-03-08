@@ -1,20 +1,21 @@
 plugins {
-    `java-library`
-    id("java-conventions")
-    id("maven-deploy")
+    id("tower.java-conventions")
+    id("tower.maven-publish")
 }
 
+description = "Tower Messaging CDI Integration"
+
 dependencies {
-    implementation("org.jboss.logging:jboss-logging")
+    implementation(libs.jboss.logging)
 
     api(project(":common"))
     api(project(":messaging-core"))
     implementation(project(":schema:schema-model"))
 
-    compileOnly("jakarta.enterprise:jakarta.enterprise.cdi-api")
-    compileOnly("org.eclipse.microprofile.context-propagation:microprofile-context-propagation-api")
+    compileOnly(libs.jakarta.cdi.api)
+    compileOnly(libs.microprofile.context.propagation.api)
 
-    testImplementation("org.jboss.logging:jboss-logging")
-    testImplementation("org.jboss:jandex")
+    testImplementation(libs.jboss.logging)
+    testImplementation(libs.jandex)
     testImplementation(project(":schema:schema-builder"))
 }

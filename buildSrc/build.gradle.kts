@@ -3,11 +3,20 @@ plugins {
 }
 
 repositories {
-    maven("https://maven.aliyun.com/repository/central")
-    maven("https://maven.aliyun.com/repository/gradle-plugin")
+    gradlePluginPortal()
+    mavenCentral()
 }
 
 dependencies {
-    implementation("io.github.gradle-nexus:publish-plugin:1.1.0")
-    implementation(gradleApi())
+    implementation("io.github.gradle-nexus:publish-plugin:2.0.0")
+}
+
+// Use the system's Java version for buildSrc
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType<JavaCompile> {
+    options.release.set(21)
 }
