@@ -53,6 +53,4 @@ tasks.withType<Javadoc> {
             tags("apiNote:a:API Note:", "implNote:a:Implementation Note:")
         }
     }
-    // Exclude files using preview features from javadoc
-    exclude("**/VirtualThreadBatchExecutor.java")
 }
