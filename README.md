@@ -96,8 +96,29 @@ gateway.send(new CreateUserCommand("John", "john@example.com"));
 |------------|---------|
 | `@UseCase` | Marks a class containing message handlers |
 | `@CommandHandle` | Marks a method as a command handler |
+| `@CommandName` | Explicitly specifies a command's name for lookup |
 | `@Predicate` | Conditional message handling |
 | `@Parameter` | Maps method parameters to message fields |
+
+### Command Names
+
+Commands can be looked up by name using `HandlerRegistry.getCommandClass(String)`. Command names are resolved using these rules:
+
+1. If the class has a `@CommandName` annotation, use its value
+2. If the class name ends with "Command", remove that suffix
+3. Otherwise, use the simple class name
+
+```java
+// Explicit name via annotation
+@CommandName("createOrder")
+public class CreateOrderCommand implements Command { }
+
+// Auto-derived name: "UpdateOrder"
+public class UpdateOrderCommand implements Command { }
+
+// Lookup by name
+Class<? extends Command> clazz = registry.getCommandClass("createOrder");
+```
 
 ## Architecture
 

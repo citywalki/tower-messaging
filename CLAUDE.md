@@ -52,14 +52,9 @@ The project is organized into the following modules:
 
 ### Core Modules
 
-- **`common`** - Shared utilities organized by domain:
-  - `io.iamcyw.tower.Preconditions` - Core validation (root level)
-  - `io.iamcyw.tower.TowerMessageCommonMessages` - Message bundle (root level)
-  - `io.iamcyw.tower.strings.StringPool` - String constants
-  - `io.iamcyw.tower.strings.StringFormatter` - Placeholder-based string formatting
-  - `io.iamcyw.tower.types.ClassNames` - Class name utilities
-  - `io.iamcyw.tower.nulls.NullSafety` - Null-safe value retrieval
-  - `io.iamcyw.tower.time.Deadlines` - Deadline timestamp calculations
+- **`common`** - Shared utilities:
+  - `io.iamcyw.tower.Preconditions` - Argument validation
+  - `io.iamcyw.tower.TowerMessageCommonMessages` - Message bundle
   - `io.iamcyw.tower.collections.ListOperations` - List transformations
 - **`messaging-core`** - Core messaging framework with `MessageGateway`, `CommandHandler` interface, `HandlerRegistry`, and interceptor chain
 - **`messaging-cdi`** - CDI integration with producers for `HandlerRegistry` and `MessageGateway`
@@ -93,6 +88,7 @@ The project is organized into the following modules:
 
 **HandlerRegistry**
 - `List<CommandHandler<C, R>> getHandlersForCommand(C command)` - Returns handlers that can process the given command
+- `Class<? extends Command> getCommandClass(String name)` - Returns the command class for a given name (resolved via `@CommandName` or auto-derived)
 
 **CommandInterceptor**
 - `int order()` - Lower values execute first (default: 0)
