@@ -18,4 +18,9 @@ dependencies {
     testImplementation(libs.jboss.logging)
     testImplementation(libs.jandex)
     testImplementation(project(":schema:schema-builder"))
+
+    // CDI testing
+    testImplementation(libs.jakarta.cdi.api)
+    testImplementation(libs.jakarta.inject.api)
+    testImplementation("org.jboss.weld:weld-junit5:4.0.3.Final")
 }
