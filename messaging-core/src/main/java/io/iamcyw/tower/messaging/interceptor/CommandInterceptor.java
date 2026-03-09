@@ -20,7 +20,7 @@ import io.iamcyw.tower.messaging.Command;
  * <p>Example usage:</p>
  * <pre>
  * public class LoggingInterceptor implements CommandInterceptor {
- *     @Override
+ *     {@literal @}Override
  *     public &lt;C extends Command, R&gt; R intercept(C command, CommandInterceptorChain chain) {
  *         System.out.println("Before: " + command);
  *         R result = chain.proceed(command);

@@ -92,9 +92,9 @@ public interface BatchCommandExecutor {
     /**
      * Executes commands with structured concurrency and timeout.
      *
-     * <p>This method uses {@link java.util.concurrent.StructuredTaskScope.ShutdownOnFailure}
-     * to execute all commands concurrently. If any command fails or the timeout is
-     * reached, all remaining tasks are cancelled and an exception is thrown.</p>
+     * <p>This method executes all commands concurrently using virtual threads.
+     * If any command fails or the timeout is reached, all remaining tasks are
+     * cancelled and an exception is thrown.</p>
      *
      * <p>Use this mode when:</p>
      * <ul>

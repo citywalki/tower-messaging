@@ -17,26 +17,26 @@ package io.iamcyw.tower.messaging;
  *
  * <p>Example generated implementation:</p>
  * <pre>
- * @Singleton
+ * {@literal @}Singleton
  * public class CreateOrderHandler$Metadata implements HandlerMetadata&lt;CreateOrderCommand, OrderResult&gt; {
  *
- *     @Override
+ *     {@literal @}Override
  *     public Class&lt;CreateOrderCommand&gt; commandType() {
  *         return CreateOrderCommand.class;
  *     }
  *
- *     @Override
+ *     {@literal @}Override
  *     public Class&lt;OrderResult&gt; resultType() {
  *         return OrderResult.class;
  *     }
  *
- *     @Override
+ *     {@literal @}Override
  *     public String handlerName() {
  *         return "com.example.CreateOrderHandler";
  *     }
  *
- *     @Override
- *     public Class<CreateOrderHandler> handlerClass() {
+ *     {@literal @}Override
+ *     public Class&lt;CreateOrderHandler&gt; handlerClass() {
  *         return CreateOrderHandler.class;
  *     }
  * }

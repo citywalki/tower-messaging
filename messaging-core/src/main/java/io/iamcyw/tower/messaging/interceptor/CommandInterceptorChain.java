@@ -16,7 +16,7 @@ import io.iamcyw.tower.messaging.Command;
  *
  * <p>Example implementation in an interceptor:</p>
  * <pre>
- * @Override
+ * {@literal @}Override
  * public &lt;C extends Command, R&gt; R intercept(C command, CommandInterceptorChain chain) {
  *     // Pre-processing
  *     validateCommand(command);

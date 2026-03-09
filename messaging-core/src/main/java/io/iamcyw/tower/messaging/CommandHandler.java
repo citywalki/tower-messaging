@@ -10,24 +10,24 @@ package io.iamcyw.tower.messaging;
  *
  * <p>Example implementation:</p>
  * <pre>
- * @Singleton
+ * {@literal @}Singleton
  * public class CreateOrderHandler implements CommandHandler&lt;CreateOrderCommand, OrderResult&gt; {
  *
  *     private final OrderRepository repository;
  *
- *     @Inject
+ *     {@literal @}Inject
  *     public CreateOrderHandler(OrderRepository repository) {
  *         this.repository = repository;
  *     }
  *
- *     @Override
+ *     {@literal @}Override
  *     public OrderResult handle(CreateOrderCommand command) {
  *         Order order = new Order(command.customerId(), command.items());
  *         repository.save(order);
  *         return new OrderResult(order.getId());
  *     }
  *
- *     @Override
+ *     {@literal @}Override
  *     public boolean canHandle(CreateOrderCommand command) {
  *         return command.items() != null &amp;&amp; !command.items().isEmpty();
  *     }
