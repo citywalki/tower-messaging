@@ -3,8 +3,8 @@ plugins {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_24
+    targetCompatibility = JavaVersion.VERSION_24
 
     withJavadocJar()
     withSourcesJar()
@@ -31,26 +31,31 @@ dependencies {
     annotationProcessor("org.jboss.logging:jboss-logging-annotations:2.2.1.Final")
 }
 
+
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+    options.release.set(24)
+    options.compilerArgs.add("--enable-preview")
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
     maxHeapSize = "1024M"
+    jvmArgs("--enable-preview")
     testLogging {
         events("passed", "skipped", "failed")
     }
 }
 
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
-    options.release.set(21)
-}
-
 tasks.withType<Javadoc> {
     options {
         encoding("UTF-8")
-        source(JavaVersion.VERSION_21.majorVersion)
+        source(JavaVersion.VERSION_24.majorVersion)
         (this as StandardJavadocDocletOptions).apply {
             addStringOption("Xdoclint:none", "-quiet")
             tags("apiNote:a:API Note:", "implNote:a:Implementation Note:")
         }
     }
+    // Exclude files using preview features from javadoc
+    exclude("**/VirtualThreadBatchExecutor.java")
 }
