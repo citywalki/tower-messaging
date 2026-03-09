@@ -1,10 +1,10 @@
-package io.iamcyw.tower.utils.collect;
+package io.iamcyw.tower.collections;
+
+import io.iamcyw.tower.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-
-import static io.iamcyw.tower.Preconditions.requireNonNull;
 
 /**
  * Operations for transforming and filtering lists without Stream API overhead.
@@ -32,8 +32,8 @@ public final class ListOperations {
      * @return a list containing all elements from the mapped lists
      */
     public static <T, R> List<R> flatMap(Iterable<? extends T> iterable, Function<T, List<R>> mapper) {
-        requireNonNull(iterable);
-        requireNonNull(mapper);
+        Preconditions.requireNonNull(iterable);
+        Preconditions.requireNonNull(mapper);
         List<R> result = new ArrayList<>();
         for (T item : iterable) {
             List<R> mapped = mapper.apply(item);
@@ -56,8 +56,8 @@ public final class ListOperations {
      * @return a list containing the transformed elements
      */
     public static <T, R> List<R> map(Iterable<? extends T> iterable, Function<? super T, ? extends R> mapper) {
-        requireNonNull(iterable);
-        requireNonNull(mapper);
+        Preconditions.requireNonNull(iterable);
+        Preconditions.requireNonNull(mapper);
         List<R> result = new ArrayList<>();
         for (T item : iterable) {
             R mapped = mapper.apply(item);
@@ -75,8 +75,8 @@ public final class ListOperations {
      * @return a list containing only elements matching the predicate
      */
     public static <R> List<R> filter(Iterable<R> iterable, Function<R, Boolean> predicate) {
-        requireNonNull(iterable);
-        requireNonNull(predicate);
+        Preconditions.requireNonNull(iterable);
+        Preconditions.requireNonNull(predicate);
         List<R> result = new ArrayList<>();
         for (R item : iterable) {
             if (Boolean.TRUE.equals(predicate.apply(item))) {

@@ -52,7 +52,15 @@ The project is organized into the following modules:
 
 ### Core Modules
 
-- **`common`** - Shared utilities (NullSafety, StringFormatter, TypeInspector, Preconditions, StringPool, FutureComposition, Deadlines, ClassNames, ListOperations)
+- **`common`** - Shared utilities organized by domain:
+  - `io.iamcyw.tower.Preconditions` - Core validation (root level)
+  - `io.iamcyw.tower.TowerMessageCommonMessages` - Message bundle (root level)
+  - `io.iamcyw.tower.strings.StringPool` - String constants
+  - `io.iamcyw.tower.strings.StringFormatter` - Placeholder-based string formatting
+  - `io.iamcyw.tower.types.ClassNames` - Class name utilities
+  - `io.iamcyw.tower.nulls.NullSafety` - Null-safe value retrieval
+  - `io.iamcyw.tower.time.Deadlines` - Deadline timestamp calculations
+  - `io.iamcyw.tower.collections.ListOperations` - List transformations
 - **`messaging-core`** - Core messaging framework with `MessageGateway`, `CommandHandler` interface, `HandlerRegistry`, and interceptor chain
 - **`messaging-cdi`** - CDI integration with producers for `HandlerRegistry` and `MessageGateway`
 
