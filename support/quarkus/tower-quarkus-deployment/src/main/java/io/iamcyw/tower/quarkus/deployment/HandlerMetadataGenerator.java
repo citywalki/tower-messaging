@@ -25,25 +25,25 @@ import org.jboss.logging.Logger;
  *
  * <p>Generated class structure:
  * <pre>
- * @Singleton
+ * {@code @Singleton}
  * public class CreateOrderHandler$Metadata implements HandlerMetadata&lt;CreateOrderCommand, OrderResult&gt; {
  *
- *     @Override
+ *     {@code @Override}
  *     public Class&lt;CreateOrderCommand&gt; commandType() {
  *         return CreateOrderCommand.class;
  *     }
  *
- *     @Override
+ *     {@code @Override}
  *     public Class&lt;OrderResult&gt; resultType() {
  *         return OrderResult.class;
  *     }
  *
- *     @Override
+ *     {@code @Override}
  *     public String handlerName() {
  *         return "com.example.CreateOrderHandler";
  *     }
  *
- *     @Override
+ *     {@code @Override}
  *     public Class&lt;CreateOrderHandler&gt; handlerClass() {
  *         return CreateOrderHandler.class;
  *     }
