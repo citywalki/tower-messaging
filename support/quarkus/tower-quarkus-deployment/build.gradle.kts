@@ -12,14 +12,4 @@ dependencies {
 
     api(libs.quarkus.core.deployment)
     api(libs.quarkus.arc.deployment)
-
-    testImplementation(libs.quarkus.junit5.internal)
-}
-
-tasks.test {
-    systemProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager")
-    systemProperty("platform.quarkus.native.builder-image", "false")
-    filter {
-        failOnNoDiscoveredTests = false
-    }
 }
