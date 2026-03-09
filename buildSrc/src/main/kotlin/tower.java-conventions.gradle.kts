@@ -32,13 +32,11 @@ dependencies {
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.release.set(24)
-    options.compilerArgs.add("--enable-preview")
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
     maxHeapSize = "1024M"
-    jvmArgs("--enable-preview")
     testLogging {
         events("passed", "skipped", "failed")
     }
