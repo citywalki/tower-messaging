@@ -8,6 +8,7 @@ description = "Tower Schema Builder"
 dependencies {
     implementation(libs.jboss.logging)
     implementation(project(":common"))
+    implementation(project(":messaging-core"))
     implementation(project(":schema:schema-model"))
     implementation(libs.jandex)
 
