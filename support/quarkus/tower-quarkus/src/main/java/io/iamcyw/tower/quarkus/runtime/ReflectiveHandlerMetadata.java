@@ -8,110 +8,42 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * Runtime implementation of {@link HandlerMetadata} that extracts type information
- * from a {@link CommandHandler} using reflection.
+ * Reflective implementation of {@link HandlerMetadata}.
  *
- * <p>This class is used by {@link QuarkusHandlerRegistry} to create metadata for
- * handlers when the generated metadata classes are not available (e.g., when
- * {@code GeneratedBeanBuildItem} doesn't properly register the generated classes
- * with the CDI container).</p>
+ * <p>This class extracts type information from a {@link CommandHandler} implementation
+ * using reflection. It is used as a fallback when generated metadata classes are not
+ * available.</p>
  *
- * <p>This implementation uses reflection to extract the generic type parameters
- * from the handler's implementation of {@code CommandHandler<C, R>}. It assumes
- * that the handler class directly implements {@code CommandHandler} with concrete
- * type parameters.</p>
- *
- * @param <C> the type of command handled
- * @param <R> the type of result produced
- * @see HandlerMetadata
- * @see QuarkusHandlerRegistry
+ * @param <C> the command type
+ * @param <R> the result type
  * @since 2.0
  */
 public class ReflectiveHandlerMetadata<C extends Command, R> implements HandlerMetadata<C, R> {
 
-    private final CommandHandler<C, R> handler;
     private final Class<C> commandType;
     private final Class<R> resultType;
-    private final String handlerName;
     private final Class<? extends CommandHandler<C, R>> handlerClass;
+    private final String handlerName;
 
     /**
-     * Constructs a new ReflectiveHandlerMetadata for the given handler.
+     * Creates reflective metadata from a handler instance.
      *
-     * <p>This constructor extracts the generic type parameters from the handler's
-     * class using reflection. It assumes the handler directly implements
-     * {@code CommandHandler<C, R>} with concrete type parameters.</p>
-     *
-     * @param handler the handler to extract metadata from; must not be null
-     * @throws IllegalArgumentException if the type parameters cannot be extracted
+     * @param handler the handler to extract metadata from
+     * @throws IllegalArgumentException if type parameters cannot be extracted
      */
     @SuppressWarnings("unchecked")
     public ReflectiveHandlerMetadata(CommandHandler<C, R> handler) {
-        if (handler == null) {
-            throw new NullPointerException("handler must not be null");
-        }
-        this.handler = handler;
         this.handlerClass = (Class<? extends CommandHandler<C, R>>) handler.getClass();
-        this.handlerName = handlerClass.getName();
+        this.handlerName = handler.getClass().getName();
 
-        // Extract generic type parameters from the handler class
-        Type[] typeParams = extractTypeParameters();
-        this.commandType = (Class<C>) typeParams[0];
-        this.resultType = (Class<R>) typeParams[1];
-    }
-
-    /**
-     * Extracts the generic type parameters from the handler class.
-     *
-     * <p>This method traverses the class hierarchy to find the {@code CommandHandler}
-     * interface and extracts its type arguments.</p>
-     *
-     * @return an array containing the command type and result type classes
-     * @throws IllegalArgumentException if the type parameters cannot be extracted
-     */
-    @SuppressWarnings("unchecked")
-    private Type[] extractTypeParameters() {
-        Class<?> clazz = handlerClass;
-
-        // Traverse the class hierarchy to find CommandHandler interface
-        while (clazz != null && clazz != Object.class) {
-            // Check direct interfaces
-            for (Type genericInterface : clazz.getGenericInterfaces()) {
-                if (genericInterface instanceof ParameterizedType) {
-                    ParameterizedType pt = (ParameterizedType) genericInterface;
-                    if (pt.getRawType().equals(CommandHandler.class)) {
-                        Type[] actualTypeArgs = pt.getActualTypeArguments();
-                        if (actualTypeArgs.length == 2) {
-                            return new Type[]{
-                                    resolveType(actualTypeArgs[0]),
-                                    resolveType(actualTypeArgs[1])
-                            };
-                        }
-                    }
-                }
-            }
-
-            // Move to superclass
-            clazz = clazz.getSuperclass();
+        Type[] typeParams = extractTypeParameters(handler.getClass());
+        if (typeParams == null || typeParams.length < 2) {
+            throw new IllegalArgumentException(
+                "Cannot extract type parameters from handler: " + handlerName);
         }
 
-        throw new IllegalArgumentException(
-                "Could not extract type parameters from handler: " + handlerName);
-    }
-
-    /**
-     * Resolves a type to its Class representation.
-     *
-     * @param type the type to resolve
-     * @return the Class representing the type
-     */
-    private Class<?> resolveType(Type type) {
-        if (type instanceof Class) {
-            return (Class<?>) type;
-        } else if (type instanceof ParameterizedType) {
-            return (Class<?>) ((ParameterizedType) type).getRawType();
-        }
-        throw new IllegalArgumentException("Unsupported type: " + type);
+        this.commandType = resolveClass(typeParams[0]);
+        this.resultType = resolveClass(typeParams[1]);
     }
 
     @Override
@@ -132,6 +64,42 @@ public class ReflectiveHandlerMetadata<C extends Command, R> implements HandlerM
     @Override
     public Class<? extends CommandHandler<C, R>> handlerClass() {
         return handlerClass;
+    }
+
+    /**
+     * Extracts type parameters from the CommandHandler interface implementation.
+     */
+    private Type[] extractTypeParameters(Class<?> clazz) {
+        for (Type genericInterface : clazz.getGenericInterfaces()) {
+            if (genericInterface instanceof ParameterizedType) {
+                ParameterizedType pt = (ParameterizedType) genericInterface;
+                if (pt.getRawType().equals(CommandHandler.class)) {
+                    return pt.getActualTypeArguments();
+                }
+            }
+        }
+
+        // Check superclass
+        Class<?> superclass = clazz.getSuperclass();
+        if (superclass != null && !superclass.equals(Object.class)) {
+            return extractTypeParameters(superclass);
+        }
+
+        return null;
+    }
+
+    /**
+     * Resolves a Type to its Class representation.
+     */
+    @SuppressWarnings("unchecked")
+    private <T> Class<T> resolveClass(Type type) {
+        if (type instanceof Class) {
+            return (Class<T>) type;
+        }
+        if (type instanceof ParameterizedType) {
+            return (Class<T>) ((ParameterizedType) type).getRawType();
+        }
+        return null;
     }
 
 }
