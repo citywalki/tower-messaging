@@ -1,7 +1,6 @@
 package io.iamcyw.tower.messaging;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -10,7 +9,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -22,7 +20,7 @@ import java.util.concurrent.TimeoutException;
  *   <li><strong>Sequential</strong>: Commands execute one at a time in the calling thread</li>
  *   <li><strong>Parallel</strong>: Each command runs in its own virtual thread using
  *       {@link Executors#newVirtualThreadPerTaskExecutor()}</li>
- *   <li><strong>Structured</strong>: Uses {@link StructuredTaskScope.ShutdownOnFailure}
+ *   <li><strong>Structured</strong>: Uses virtual threads with timeout
  *       for automatic cancellation on failure or timeout</li>
  * </ul>
  *
@@ -175,11 +173,11 @@ public class VirtualThreadBatchExecutor implements BatchCommandExecutor {
     }
 
     /**
-     * Executes commands with structured concurrency and timeout.
+     * Executes commands with timeout using virtual threads.
      *
-     * <p>This method uses {@link StructuredTaskScope.ShutdownOnFailure} to execute
-     * all commands concurrently. If any command fails or the timeout is reached,
-     * all remaining tasks are cancelled and an exception is thrown.</p>
+     * <p>This method creates a virtual thread per task executor and submits
+     * all commands concurrently with a timeout. If any command fails or the
+     * timeout is reached, remaining tasks are cancelled.</p>
      *
      * @param <R> the type of result produced by the commands
      * @param commands the list of commands to execute; never null
@@ -201,32 +199,57 @@ public class VirtualThreadBatchExecutor implements BatchCommandExecutor {
             return List.of();
         }
 
-        Instant deadline = Instant.now().plus(timeout);
+        // Create tasks for each command
+        List<Callable<R>> tasks = new ArrayList<>(commands.size());
+        for (Command command : commands) {
+            tasks.add(() -> executeSingle(command, registry));
+        }
 
-        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
-            // Fork all tasks
-            List<StructuredTaskScope.Subtask<R>> subtasks = new ArrayList<>(commands.size());
-            for (Command command : commands) {
-                subtasks.add(scope.fork(() -> executeSingle(command, registry)));
+        // Execute using virtual thread per task executor with timeout
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            List<Future<R>> futures = new ArrayList<>();
+            for (Callable<R> task : tasks) {
+                futures.add(executor.submit(task));
             }
 
-            // Wait for all tasks or first failure, with timeout
-            try {
-                scope.joinUntil(deadline);
-            } catch (TimeoutException e) {
+            // Collect results with timeout handling
+            List<R> results = new ArrayList<>(commands.size());
+            List<Throwable> failures = new ArrayList<>();
+            Command firstFailedCommand = null;
+            int firstFailedIndex = -1;
+
+            for (int i = 0; i < futures.size(); i++) {
+                Future<R> future = futures.get(i);
+                try {
+                    R result = future.get(timeout.toMillis(), java.util.concurrent.TimeUnit.MILLISECONDS);
+                    results.add(result);
+                } catch (TimeoutException e) {
+                    future.cancel(true);
+                    throw new BatchExecutionException(
+                            "Structured execution timed out after " + timeout,
+                            e
+                    );
+                } catch (ExecutionException e) {
+                    future.cancel(true);
+                    Throwable cause = e.getCause();
+                    failures.add(cause);
+                    if (firstFailedCommand == null) {
+                        firstFailedCommand = commands.get(i);
+                        firstFailedIndex = i;
+                    }
+                }
+            }
+
+            // If there were any failures, throw aggregate exception
+            if (!failures.isEmpty()) {
                 throw new BatchExecutionException(
-                        "Structured execution timed out after " + timeout,
-                        e
+                        "Structured execution failed with " + failures.size() + " failure(s). " +
+                                "First failure at index " + firstFailedIndex,
+                        failures,
+                        firstFailedCommand,
+                        firstFailedIndex,
+                        results
                 );
-            }
-
-            // Check for failures
-            scope.throwIfFailed();
-
-            // Collect results in order
-            List<R> results = new ArrayList<>(subtasks.size());
-            for (StructuredTaskScope.Subtask<R> subtask : subtasks) {
-                results.add(subtask.get());
             }
 
             return results;
@@ -235,15 +258,6 @@ public class VirtualThreadBatchExecutor implements BatchCommandExecutor {
             Thread.currentThread().interrupt();
             throw new BatchExecutionException(
                     "Structured execution was interrupted",
-                    e
-            );
-        } catch (Exception e) {
-            // Handle failures from throwIfFailed()
-            if (e instanceof BatchExecutionException) {
-                throw (BatchExecutionException) e;
-            }
-            throw new BatchExecutionException(
-                    "Structured execution failed: " + e.getMessage(),
                     e
             );
         }
