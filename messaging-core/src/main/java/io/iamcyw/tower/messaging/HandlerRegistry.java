@@ -74,4 +74,35 @@ public interface HandlerRegistry {
      */
     <C extends Command, R> List<CommandHandler<C, R>> getHandlersForCommand(C command);
 
+    /**
+     * Returns the command class for the given command name.
+     *
+     * <p>This method looks up a command class by its registered name. The name
+     * is resolved from the command class using the configured {@link CommandNameResolver}.
+     * When a command class has a {@link CommandName} annotation, that value is used;
+     * otherwise, the name is derived by removing the "Command" suffix from the class name.</p>
+     *
+     * <p>Usage example:</p>
+     * <pre>
+     * // Command with annotation
+     * &#64;CommandName("createOrder")
+     * public class CreateOrderCommand implements Command { }
+     *
+     * // Command without annotation (auto-derived name: "UpdateOrder")
+     * public class UpdateOrderCommand implements Command { }
+     *
+     * // Lookup by name
+     * Class&lt;? extends Command&gt; clazz = registry.getCommandClass("createOrder");
+     * Class&lt;? extends Command&gt; clazz2 = registry.getCommandClass("UpdateOrder");
+     * </pre>
+     *
+     * @param name the command name to look up; never null
+     * @return the command class associated with the given name, or null if not found
+     * @throws NullPointerException if name is null
+     * @see CommandName
+     * @see CommandNameResolver
+     * @since 2.0
+     */
+    Class<? extends Command> getCommandClass(String name);
+
 }

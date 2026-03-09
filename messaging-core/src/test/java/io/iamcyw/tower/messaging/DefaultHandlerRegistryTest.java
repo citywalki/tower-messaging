@@ -402,4 +402,277 @@ class DefaultHandlerRegistryTest {
         assertThat(handlers).isEmpty();
     }
 
+    // ============================================================================
+    // getCommandClass tests
+    // ============================================================================
+
+    /**
+     * Command class that ends with "Command" suffix for auto-derived name testing.
+     */
+    static class CreateOrderCommand implements Command {
+    }
+
+    /**
+     * Command class with @CommandName annotation.
+     */
+    @CommandName("customOrderName")
+    static class AnnotatedOrderCommand implements Command {
+    }
+
+    /**
+     * Command class without "Command" suffix.
+     */
+    static class SimpleEvent implements Command {
+    }
+
+    /**
+     * Dummy handler class for TestCommand metadata tests (not actually invoked).
+     */
+    static class DummyHandler implements CommandHandler<TestCommand, TestResult> {
+        @Override
+        public TestResult handle(TestCommand command) {
+            return new TestResult("dummy");
+        }
+    }
+
+    /**
+     * Dummy handler for CreateOrderCommand command type.
+     */
+    static class CreateOrderHandler implements CommandHandler<CreateOrderCommand, TestResult> {
+        @Override
+        public TestResult handle(CreateOrderCommand command) {
+            return new TestResult("dummy");
+        }
+    }
+
+    /**
+     * Dummy handler for AnnotatedOrderCommand command type.
+     */
+    static class AnnotatedOrderHandler implements CommandHandler<AnnotatedOrderCommand, TestResult> {
+        @Override
+        public TestResult handle(AnnotatedOrderCommand command) {
+            return new TestResult("dummy");
+        }
+    }
+
+    /**
+     * Dummy handler for SimpleEvent command type.
+     */
+    static class SimpleEventHandler implements CommandHandler<SimpleEvent, TestResult> {
+        @Override
+        public TestResult handle(SimpleEvent command) {
+            return new TestResult("dummy");
+        }
+    }
+
+
+    @Test
+    @DisplayName("Should return command class by auto-derived name (removing Command suffix)")
+    void shouldReturnCommandClassByAutoDerivedName() {
+        // Given - registry with a command class ending in "Command"
+        HandlerMetadata<CreateOrderCommand, TestResult> metadata = createMetadata(
+                "test",
+                CreateOrderCommand.class,
+                TestResult.class,
+                CreateOrderHandler.class
+        );
+
+        DefaultHandlerRegistry registry = new DefaultHandlerRegistry(
+                Collections.emptyList(),
+                List.of(metadata)
+        );
+
+        // When - looking up by auto-derived name
+        Class<? extends Command> result = registry.getCommandClass("CreateOrder");
+
+        // Then - should return the correct class
+        assertThat(result).isEqualTo(CreateOrderCommand.class);
+    }
+
+    @Test
+    @DisplayName("Should return command class by annotation name")
+    void shouldReturnCommandClassByAnnotationName() {
+        // Given - registry with annotated command class
+        HandlerMetadata<AnnotatedOrderCommand, TestResult> metadata = createMetadata(
+                "test",
+                AnnotatedOrderCommand.class,
+                TestResult.class,
+                AnnotatedOrderHandler.class
+        );
+
+        DefaultHandlerRegistry registry = new DefaultHandlerRegistry(
+                Collections.emptyList(),
+                List.of(metadata)
+        );
+
+        // When - looking up by annotation name
+        Class<? extends Command> result = registry.getCommandClass("customOrderName");
+
+        // Then - should return the correct class
+        assertThat(result).isEqualTo(AnnotatedOrderCommand.class);
+    }
+
+    @Test
+    @DisplayName("Should return null for unknown command name")
+    void shouldReturnNullForUnknownCommandName() {
+        // Given - empty registry
+        DefaultHandlerRegistry registry = new DefaultHandlerRegistry(
+                Collections.emptyList(),
+                Collections.emptyList()
+        );
+
+        // When - looking up unknown name
+        Class<? extends Command> result = registry.getCommandClass("UnknownCommand");
+
+        // Then - should return null
+        assertThat(result).isNull();
+    }
+
+    @Test
+    @DisplayName("Should return null for non-existent name when registry has commands")
+    void shouldReturnNullForNonExistentName() {
+        // Given - registry with commands
+        HandlerMetadata<TestCommand, TestResult> metadata = createMetadata(
+                "test",
+                TestCommand.class,
+                TestResult.class,
+                DummyHandler.class
+        );
+
+        DefaultHandlerRegistry registry = new DefaultHandlerRegistry(
+                Collections.emptyList(),
+                List.of(metadata)
+        );
+
+        // When - looking up non-existent name
+        Class<? extends Command> result = registry.getCommandClass("NonExistent");
+
+        // Then - should return null
+        assertThat(result).isNull();
+    }
+
+    @Test
+    @DisplayName("Should use simple class name when no Command suffix and no annotation")
+    void shouldUseSimpleClassNameWhenNoCommandSuffix() {
+        // Given - command without Command suffix
+        HandlerMetadata<SimpleEvent, TestResult> metadata = createMetadata(
+                "test",
+                SimpleEvent.class,
+                TestResult.class,
+                SimpleEventHandler.class
+        );
+
+        DefaultHandlerRegistry registry = new DefaultHandlerRegistry(
+                Collections.emptyList(),
+                List.of(metadata)
+        );
+
+        // When - looking up by simple class name
+        Class<? extends Command> result = registry.getCommandClass("SimpleEvent");
+
+        // Then - should return the correct class
+        assertThat(result).isEqualTo(SimpleEvent.class);
+    }
+
+    @Test
+    @DisplayName("Should throw NullPointerException when name is null")
+    void shouldThrowExceptionWhenNameIsNull() {
+        // Given - a registry
+        DefaultHandlerRegistry registry = new DefaultHandlerRegistry(
+                Collections.emptyList(),
+                Collections.emptyList()
+        );
+
+        // Then - should throw when name is null
+        assertThatThrownBy(() -> registry.getCommandClass(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessageContaining("name");
+    }
+
+    /**
+     * Command class that would resolve to the same name as DuplicateNameCommand via annotation.
+     */
+    @CommandName("SameName")
+    static class FirstDuplicateNameCommand implements Command {
+    }
+
+    /**
+     * Another command class with the same annotation name.
+     */
+    @CommandName("SameName")
+    static class SecondDuplicateNameCommand implements Command {
+    }
+
+    /**
+     * Dummy handler for FirstDuplicateNameCommand command type.
+     */
+    static class FirstDuplicateHandler implements CommandHandler<FirstDuplicateNameCommand, TestResult> {
+        @Override
+        public TestResult handle(FirstDuplicateNameCommand command) {
+            return new TestResult("dummy");
+        }
+    }
+
+    /**
+     * Dummy handler for SecondDuplicateNameCommand command type.
+     */
+    static class SecondDuplicateHandler implements CommandHandler<SecondDuplicateNameCommand, TestResult> {
+        @Override
+        public TestResult handle(SecondDuplicateNameCommand command) {
+            return new TestResult("dummy");
+        }
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalStateException for duplicate command names")
+    void shouldThrowExceptionForDuplicateCommandNames() {
+        // Given - two different command types with the same @CommandName annotation
+        HandlerMetadata<FirstDuplicateNameCommand, TestResult> metadata1 = createMetadata(
+                "test1",
+                FirstDuplicateNameCommand.class,
+                TestResult.class,
+                FirstDuplicateHandler.class
+        );
+        HandlerMetadata<SecondDuplicateNameCommand, TestResult> metadata2 = createMetadata(
+                "test2",
+                SecondDuplicateNameCommand.class,
+                TestResult.class,
+                SecondDuplicateHandler.class
+        );
+
+        // Then - should throw when creating registry with duplicate command names
+        assertThatThrownBy(() -> new DefaultHandlerRegistry(
+                Collections.emptyList(),
+                List.of(metadata1, metadata2)
+        ))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Duplicate command name");
+    }
+
+    @Test
+    @DisplayName("Should use custom name resolver when provided")
+    void shouldUseCustomNameResolver() {
+        // Given - a custom resolver
+        CommandNameResolver customResolver = clazz -> "prefix_" + clazz.getSimpleName();
+
+        HandlerMetadata<TestCommand, TestResult> metadata = createMetadata(
+                "test",
+                TestCommand.class,
+                TestResult.class,
+                DummyHandler.class
+        );
+
+        DefaultHandlerRegistry registry = new DefaultHandlerRegistry(
+                Collections.emptyList(),
+                List.of(metadata),
+                customResolver
+        );
+
+        // When - looking up by custom resolved name
+        Class<? extends Command> result = registry.getCommandClass("prefix_TestCommand");
+
+        // Then - should return the correct class
+        assertThat(result).isEqualTo(TestCommand.class);
+    }
+
 }
