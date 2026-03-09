@@ -40,7 +40,7 @@ The project is organized into the following modules:
 
 ### Core Modules
 
-- **`common`** - Shared utilities (TypeReflectionKit, Classes, CommonKit, ListKit)
+- **`common`** - Shared utilities (Classes, CommonKit, ListKit)
 - **`messaging-core`** - Core messaging framework with MessageBus, message handlers, and dispatch logic
 - **`messaging-cdi`** - CDI integration for dependency injection support
 
