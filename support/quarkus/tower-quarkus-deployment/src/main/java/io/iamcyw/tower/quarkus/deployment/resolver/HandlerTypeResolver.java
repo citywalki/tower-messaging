@@ -1,8 +1,7 @@
-package io.iamcyw.tower.schema;
+package io.iamcyw.tower.quarkus.deployment.resolver;
 
 import io.iamcyw.tower.messaging.Command;
 import io.iamcyw.tower.messaging.CommandHandler;
-import io.iamcyw.tower.schema.model.HandlerTypeInfo;
 import org.jboss.jandex.*;
 
 import java.util.*;
@@ -53,7 +52,7 @@ public class HandlerTypeResolver {
      * @param index the Jandex index to scan, must not be null
      * @return a list of HandlerTypeInfo for all discovered handlers, never null
      * @throws NullPointerException if index is null
-     * @throws SchemaBuilderException if a handler's generic types cannot be resolved
+     * @throws HandlerTypeResolutionException if a handler's generic types cannot be resolved
      */
     public List<HandlerTypeInfo> resolveAll(IndexView index) {
         Objects.requireNonNull(index, "IndexView must not be null");
@@ -85,7 +84,7 @@ public class HandlerTypeResolver {
      * @param index        the Jandex index for looking up class information, must not be null
      * @return the resolved HandlerTypeInfo containing command type, result type, and handler class name
      * @throws NullPointerException if handlerClass or index is null
-     * @throws SchemaBuilderException if the generic types cannot be resolved or if the
+     * @throws HandlerTypeResolutionException if the generic types cannot be resolved or if the
      *                                command type does not implement Command
      */
     public HandlerTypeInfo resolve(ClassInfo handlerClass, IndexView index) {
@@ -98,7 +97,7 @@ public class HandlerTypeResolver {
         Type[] typeParams = extractTypeParameters(handlerClass, index, visited);
 
         if (typeParams == null || typeParams.length < 2) {
-            throw new SchemaBuilderException(
+            throw new HandlerTypeResolutionException(
                 "Cannot resolve generic type parameters for handler class: " + handlerClass.name() +
                 ". Ensure the class implements CommandHandler<C extends Command, R> with concrete types.");
         }
@@ -109,14 +108,14 @@ public class HandlerTypeResolver {
         // Resolve ClassInfo for command type
         ClassInfo commandClassInfo = resolveClassInfo(commandType, index);
         if (commandClassInfo == null) {
-            throw new SchemaBuilderException(
+            throw new HandlerTypeResolutionException(
                 "Cannot resolve command type class info for: " + commandType +
                 " in handler: " + handlerClass.name());
         }
 
         // Validate that command type implements Command interface
         if (!implementsCommand(commandClassInfo, index)) {
-            throw new SchemaBuilderException(
+            throw new HandlerTypeResolutionException(
                 "Command type " + commandClassInfo.name() +
                 " must implement " + Command.class.getName() +
                 " in handler: " + handlerClass.name());

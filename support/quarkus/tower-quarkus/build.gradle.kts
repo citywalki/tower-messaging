@@ -17,5 +17,4 @@ dependencies {
     implementation(libs.quarkus.arc)
 
     api(project(":messaging-cdi"))
-    api(project(":schema:schema-model"))
 }

@@ -3,7 +3,7 @@ package io.iamcyw.tower.quarkus.deployment;
 import io.iamcyw.tower.messaging.Command;
 import io.iamcyw.tower.messaging.CommandHandler;
 import io.iamcyw.tower.messaging.HandlerMetadata;
-import io.iamcyw.tower.schema.model.HandlerTypeInfo;
+import io.iamcyw.tower.quarkus.deployment.resolver.HandlerTypeInfo;
 import io.quarkus.arc.deployment.GeneratedBeanBuildItem;
 import io.quarkus.arc.deployment.GeneratedBeanGizmoAdaptor;
 import io.quarkus.deployment.annotations.BuildProducer;

@@ -17,14 +17,9 @@ dependencyResolutionManagement {
 }
 
 // Project Structure
-include("messaging-dependencies")
-
 include("common")
 include("messaging-core")
 include("messaging-cdi")
-
-include("schema:schema-model")
-include("schema:schema-builder")
 
 include("support:quarkus:tower-quarkus")
 include("support:quarkus:tower-quarkus-deployment")

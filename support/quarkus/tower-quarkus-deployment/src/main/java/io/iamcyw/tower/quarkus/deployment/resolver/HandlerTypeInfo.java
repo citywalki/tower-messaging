@@ -1,4 +1,4 @@
-package io.iamcyw.tower.schema.model;
+package io.iamcyw.tower.quarkus.deployment.resolver;
 
 import org.jboss.jandex.ClassInfo;
 
@@ -21,7 +21,7 @@ import org.jboss.jandex.ClassInfo;
  * </pre>
  *
  * @see io.iamcyw.tower.messaging.CommandHandler
- * @see io.iamcyw.tower.schema.HandlerTypeResolver
+ * @see HandlerTypeResolver
  * @since 2.0
  */
 public final class HandlerTypeInfo {
