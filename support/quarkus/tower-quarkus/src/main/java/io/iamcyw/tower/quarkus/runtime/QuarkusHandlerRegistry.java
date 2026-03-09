@@ -265,4 +265,28 @@ public class QuarkusHandlerRegistry implements HandlerRegistry {
         handlers.forEach(h -> LOG.debugf("Registered handler: %s", h.getClass().getName()));
     }
 
+    /**
+     * Returns the command class for the given command name.
+     *
+     * <p>This method uses lazy initialization to collect handlers on the first call,
+     * just like {@link #getHandlersForCommand(Command)}. The actual lookup is delegated
+     * to {@link DefaultHandlerRegistry#getCommandClass(String)}.</p>
+     *
+     * @param name the command name to look up; never null
+     * @return the command class associated with the given name, or null if not found
+     * @throws NullPointerException if name is null
+     */
+    @Override
+    public Class<? extends Command> getCommandClass(String name) {
+        // Lazy initialization - first call initializes the registry
+        if (delegate == null) {
+            synchronized (this) {
+                if (delegate == null) {
+                    initialize();
+                }
+            }
+        }
+        return delegate.getCommandClass(name);
+    }
+
 }
