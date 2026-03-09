@@ -52,7 +52,7 @@ The project is organized into the following modules:
 
 ### Core Modules
 
-- **`common`** - Shared utilities (CommonKit, ListKit, Classes, Assert, StringPool, Async utilities)
+- **`common`** - Shared utilities (NullSafety, StringFormatter, TypeInspector, Preconditions, StringPool, FutureComposition, Deadlines, ClassNames, ListOperations)
 - **`messaging-core`** - Core messaging framework with `MessageGateway`, `CommandHandler` interface, `HandlerRegistry`, and interceptor chain
 - **`messaging-cdi`** - CDI integration with producers for `HandlerRegistry` and `MessageGateway`
 
