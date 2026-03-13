@@ -23,6 +23,9 @@ guava = "33.3.1-jre"
 # Quarkus
 quarkus = "3.31.2"
 
+# Spring Boot
+spring-boot = "4.0.0"
+
 # Testing
 junit-jupiter = "5.11.4"
 assertj = "3.27.3"
@@ -65,6 +68,11 @@ quarkus-arc-deployment = { module = "io.quarkus:quarkus-arc-deployment" }
 quarkus-junit5 = { module = "io.quarkus:quarkus-junit5" }
 quarkus-junit5-internal = { module = "io.quarkus:quarkus-junit5-internal" }
 quarkus-extension-processor = { module = "io.quarkus:quarkus-extension-processor" }
+
+# Spring Boot
+spring-boot-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure", version.ref = "spring-boot" }
+spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "spring-boot" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
 
 # Testing
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter" }

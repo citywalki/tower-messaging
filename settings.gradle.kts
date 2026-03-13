@@ -25,3 +25,6 @@ include("support:quarkus:tower-quarkus")
 include("support:quarkus:tower-quarkus-deployment")
 include("support:quarkus:integration-tests")
 
+include("support:spring:tower-spring-boot-starter")
+include("support:spring:integration-tests")
+
